@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>我们的淡蓝恋爱相册</title>
+    <style>
+      :root {
+        --sky-50: #f4fbff;
+        --sky-100: #e3f5ff;
+        --sky-200: #c6eaff;
+        --sky-500: #5faed4;
+        --ink: #183246;
+        --muted: #5d7688;
+        --line: rgba(76, 145, 180, 0.22);
+        --paper: rgba(255, 255, 255, 0.9);
+        --coral: #ff8e8e;
+        --sun: #ffd86e;
+        --leaf: #76c8a4;
+        --shadow: 0 18px 46px rgba(48, 98, 124, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
+        background:
+          linear-gradient(180deg, rgba(244, 251, 255, 0.92), rgba(227, 245, 255, 0.88) 42%, rgba(251, 253, 255, 1)),
+          repeating-linear-gradient(135deg, rgba(198, 234, 255, 0.24) 0 1px, transparent 1px 18px);
+        line-height: 1.65;
+      }
+
+      img,
+      video {
+        display: block;
+        max-width: 100%;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .site-header {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 18px max(20px, 6vw);
+        color: #f8fcff;
+        background: linear-gradient(180deg, rgba(18, 45, 64, 0.55), rgba(18, 45, 64, 0));
+      }
+
+      .mark {
+        font-size: 1rem;
+        font-weight: 800;
+      }
+
+      .site-header nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 18px;
+        font-size: 0.92rem;
+        font-weight: 700;
+      }
+
+      .site-header a {
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.24);
+      }
+
+      .site-header nav a {
+        border-bottom: 2px solid transparent;
+      }
+
+      .site-header nav a:hover,
+      .site-header nav a:focus-visible {
+        border-color: currentColor;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 86svh;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+        padding: 118px max(20px, 6vw) 60px;
+        isolation: isolate;
+      }
+
+      .hero__photo {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 47%;
+      }
+
+      .hero__shade {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+          linear-gradient(90deg, rgba(15, 46, 66, 0.74), rgba(18, 59, 83, 0.28) 48%, rgba(245, 252, 255, 0.1)),
+          linear-gradient(0deg, rgba(5, 25, 40, 0.54), rgba(5, 25, 40, 0.06) 52%);
+      }
+
+      .hero__copy {
+        max-width: 760px;
+        color: #f7fcff;
+        text-shadow: 0 2px 18px rgba(0, 0, 0, 0.34);
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        font-size: 0.96rem;
+        font-weight: 800;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 18px;
+        font-size: 4.5rem;
+        line-height: 1.06;
+      }
+
+      .hero__copy > p:last-of-type {
+        max-width: 660px;
+        margin-bottom: 28px;
+        font-size: 1.18rem;
+      }
+
+      .hero__stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .hero__stat {
+        min-width: 118px;
+        padding: 10px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.13);
+        backdrop-filter: blur(12px);
+      }
+
+      .hero__stat strong {
+        display: block;
+        font-size: 1.15rem;
+        line-height: 1.2;
+      }
+
+      .hero__stat span {
+        display: block;
+        font-size: 0.82rem;
+      }
+
+      main > section:not(.hero) {
+        padding: 78px max(20px, 6vw);
+      }
+
+      .section-inner {
+        width: min(1180px, 100%);
+        margin: 0 auto;
+      }
+
+      .section-heading {
+        display: grid;
+        grid-template-columns: minmax(0, 0.85fr) minmax(240px, 0.55fr);
+        gap: 28px;
+        align-items: end;
+        margin-bottom: 28px;
+      }
+
+      .section-heading h2 {
+        margin-bottom: 10px;
+        font-size: 2.35rem;
+        line-height: 1.18;
+      }
+
+      .section-heading p {
+        color: var(--muted);
+      }
+
+      .note-line {
+        border-left: 4px solid var(--sky-500);
+        padding-left: 16px;
+      }
+
+      .gallery {
+        columns: 3 260px;
+        column-gap: 18px;
+      }
+
+      .photo-tile {
+        appearance: none;
+        display: inline-block;
+        width: 100%;
+        margin: 0 0 18px;
+        padding: 0;
+        overflow: hidden;
+        text-align: left;
+        color: inherit;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--paper);
+        box-shadow: 0 12px 30px rgba(69, 126, 158, 0.12);
+        cursor: pointer;
+        break-inside: avoid;
+        transition: transform 180ms ease, box-shadow 180ms ease;
+      }
+
+      .photo-tile figure {
+        margin: 0;
+      }
+
+      .photo-tile:hover,
+      .photo-tile:focus-visible {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+        outline: none;
+      }
+
+      .photo-tile img {
+        width: 100%;
+        height: auto;
+      }
+
+      .photo-tile figcaption {
+        padding: 13px 14px 15px;
+        font-size: 0.96rem;
+        color: var(--ink);
+      }
+
+      .video-band {
+        background: linear-gradient(180deg, rgba(227, 245, 255, 0.72), rgba(255, 255, 255, 0.9));
+        border-block: 1px solid var(--line);
+      }
+
+      .video-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.58fr);
+        gap: 24px;
+        align-items: stretch;
+      }
+
+      .video-frame,
+      .memory-note,
+      .lyric-card,
+      .moment {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.86);
+        box-shadow: 0 14px 34px rgba(67, 119, 148, 0.12);
+      }
+
+      .video-frame {
+        overflow: hidden;
+      }
+
+      .video-frame video {
+        width: 100%;
+        max-height: 72vh;
+        background: #d5ebf7;
+      }
+
+      .memory-note {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 24px;
+      }
+
+      .memory-note h2 {
+        margin-bottom: 12px;
+        font-size: 2rem;
+        line-height: 1.18;
+      }
+
+      .memory-note p {
+        color: var(--muted);
+      }
+
+      .tiny-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 22px;
+      }
+
+      .tiny-tags span {
+        padding: 5px 10px;
+        border: 1px solid rgba(95, 174, 212, 0.28);
+        border-radius: 999px;
+        color: #315c75;
+        background: #eef9ff;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .lyrics-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .lyric-card {
+        position: relative;
+        min-height: 190px;
+        padding: 22px;
+        overflow: hidden;
+      }
+
+      .lyric-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 7px;
+        background: var(--accent, var(--sky-500));
+      }
+
+      .lyric-card h3 {
+        margin-bottom: 14px;
+        font-size: 1rem;
+      }
+
+      .lyric-card p {
+        margin-bottom: 0;
+        font-size: 1.13rem;
+        color: #233f52;
+      }
+
+      .lyric-card small {
+        display: block;
+        margin-top: 18px;
+        color: var(--muted);
+      }
+
+      .moments {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .moment {
+        padding: 19px;
+      }
+
+      .moment strong {
+        display: block;
+        margin-bottom: 8px;
+        color: #2c6686;
+        font-size: 1.3rem;
+      }
+
+      .moment p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .closing {
+        padding: 58px max(20px, 6vw) 72px;
+        text-align: center;
+        color: #315c75;
+      }
+
+      .closing p {
+        margin: 0 auto;
+        max-width: 720px;
+        font-size: 1.18rem;
+      }
+
+      dialog {
+        width: min(980px, calc(100% - 32px));
+        max-height: calc(100% - 32px);
+        padding: 0;
+        border: 0;
+        border-radius: 8px;
+        color: var(--ink);
+        background: #f8fcff;
+        box-shadow: 0 28px 80px rgba(16, 48, 68, 0.36);
+      }
+
+      dialog::backdrop {
+        background: rgba(11, 35, 50, 0.62);
+      }
+
+      .modal-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .modal-body img {
+        width: 100%;
+        max-height: 78vh;
+        object-fit: contain;
+        background: #eaf7ff;
+      }
+
+      .modal-caption {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 16px;
+      }
+
+      .modal-caption p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .close-button {
+        width: 40px;
+        height: 40px;
+        flex: 0 0 auto;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        color: #315c75;
+        background: white;
+        cursor: pointer;
+        font-size: 1.35rem;
+        line-height: 1;
+      }
+
+      .close-button:hover,
+      .close-button:focus-visible {
+        outline: none;
+        border-color: var(--sky-500);
+        color: var(--sky-500);
+      }
+
+      @media (max-width: 860px) {
+        .site-header {
+          align-items: flex-start;
+          padding-top: 14px;
+        }
+
+        .site-header nav {
+          gap: 10px 14px;
+          font-size: 0.86rem;
+        }
+
+        h1 {
+          font-size: 3rem;
+        }
+
+        .hero {
+          min-height: 84svh;
+          padding-top: 126px;
+        }
+
+        .hero__shade {
+          background:
+            linear-gradient(90deg, rgba(15, 46, 66, 0.7), rgba(18, 59, 83, 0.35)),
+            linear-gradient(0deg, rgba(5, 25, 40, 0.62), rgba(5, 25, 40, 0.08) 62%);
+        }
+
+        .section-heading,
+        .video-layout,
+        .lyrics-grid,
+        .moments {
+          grid-template-columns: 1fr;
+        }
+
+        .section-heading h2 {
+          font-size: 2rem;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .site-header {
+          position: absolute;
+        }
+
+        .mark {
+          max-width: 120px;
+          line-height: 1.3;
+        }
+
+        .site-header nav {
+          max-width: 190px;
+        }
+
+        h1 {
+          font-size: 2.45rem;
+        }
+
+        .hero__copy > p:last-of-type,
+        .closing p {
+          font-size: 1.03rem;
+        }
+
+        main > section:not(.hero) {
+          padding-block: 54px;
+        }
+
+        .hero__stat {
+          min-width: 0;
+          flex: 1 1 120px;
+        }
+
+        .gallery {
+          columns: 1;
+        }
+
+        .lyric-card {
+          min-height: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header" aria-label="页面导航">
+      <a class="mark" href="#top">蓝色情书</a>
+      <nav>
+        <a href="#gallery">照片</a>
+        <a href="#video">视频</a>
+        <a href="#lyrics">歌单</a>
+        <a href="#moments">回忆</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-label="我们的淡蓝恋爱相册">
+        <img class="hero__photo" src="assets/photo-04.jpg" alt="两个人靠在一起和可爱的手作玩偶合影">
+        <div class="hero__shade"></div>
+        <div class="hero__copy">
+          <p class="eyebrow">2026 · 淡蓝色的喜欢</p>
+          <h1>我们的淡蓝恋爱相册</h1>
+          <p>把屏幕里的心、并肩的自拍、手作的小碗，都放进一个只属于我们的晴天。</p>
+          <div class="hero__stats" aria-label="相册内容">
+            <div class="hero__stat">
+              <strong>7</strong>
+              <span>张甜蜜照片</span>
+            </div>
+            <div class="hero__stat">
+              <strong>1</strong>
+              <span>段视频回忆</span>
+            </div>
+            <div class="hero__stat">
+              <strong>∞</strong>
+              <span>份偏爱</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="gallery" aria-labelledby="gallery-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Photo Wall</p>
+              <h2 id="gallery-title">把喜欢收藏起来</h2>
+            </div>
+            <p class="note-line">每一张都像淡蓝色的便签，记着靠近、想念、一起笑，以及你们没有说出口也很明显的在乎。</p>
+          </div>
+
+          <div class="gallery">
+            <button class="photo-tile" type="button" data-full="assets/photo-01.jpg" data-caption="靠近一点，今天也在同一个镜头里。">
+              <figure>
+                <img src="assets/photo-01.jpg" alt="两个人在车内靠近镜头的合照" width="1280" height="1707" loading="lazy">
+                <figcaption>靠近一点，今天也在同一个镜头里。</figcaption>
+              </figure>
+            </button>
+
+            <button class="photo-tile" type="button" data-full="assets/photo-02.jpg" data-caption="隔着屏幕，也能比一个完整的心。">
+              <figure>
+                <img src="assets/photo-02.jpg" alt="视频通话中女生用双手比心，右下角有男生小窗口" width="878" height="1900" loading="lazy">
+                <figcaption>隔着屏幕，也能比一个完整的心。</figcaption>
+              </figure>
+            </button>
+
+            <button class="photo-tile" type="button" data-full="assets/photo-03.jpg" data-caption="喜欢你认真挑衣服的样子。">
+              <figure>
+                <img src="assets/photo-03.jpg" alt="女生在衣帽间对镜自拍" width="1280" height="1707" loading="lazy">
+                <figcaption>喜欢你认真挑衣服的样子。</figcaption>
+              </figure>
+            </button>
+
+            <button class="photo-tile" type="button" data-full="assets/photo-04.jpg" data-caption="一起把可爱举到镜头前。">
+              <figure>
+                <img src="assets/photo-04.jpg" alt="两个人靠近自拍，前方有可爱的手作玩偶" width="1280" height="1707" loading="lazy">
+                <figcaption>一起把可爱举到镜头前。</figcaption>
+              </figure>
+            </button>
+
+            <button class="photo-tile" type="button" data-full="assets/photo-05.jpg" data-caption="小碗和小脑袋，都被今天记住了。">
+              <figure>
+                <img src="assets/photo-05.jpg" alt="桌面上一个手作陶碗和小装饰" width="960" height="1280" loading="lazy">
+                <figcaption>小碗和小脑袋，都被今天记住了。</figcaption>
+              </figure>
+            </button>
+
+            <button class="photo-tile" type="button" data-full="assets/photo-06.jpg" data-caption="镜子里装下两份笑意。">
+              <figure>
+                <img src="assets/photo-06.jpg" alt="两个人在衣帽间的镜子前合照" width="1280" height="720" loading="lazy">
+                <figcaption>镜子里装下两份笑意。</figcaption>
+              </figure>
+            </button>
+
+            <button class="photo-tile" type="button" data-full="assets/photo-07.jpg" data-caption="屏幕那边的你，也像一束柔光。">
+              <figure>
+                <img src="assets/photo-07.jpg" alt="屏幕中女生的照片" width="810" height="1440" loading="lazy">
+                <figcaption>屏幕那边的你，也像一束柔光。</figcaption>
+              </figure>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="video-band" id="video" aria-labelledby="video-title">
+        <div class="section-inner video-layout">
+          <div class="video-frame">
+            <video controls preload="metadata" poster="assets/photo-01.jpg">
+              <source src="assets/memory-video.mp4" type="video/mp4">
+              你的浏览器暂时无法播放这个视频。
+            </video>
+          </div>
+          <aside class="memory-note">
+            <div>
+              <p class="eyebrow">Moving Memory</p>
+              <h2 id="video-title">会动的回忆</h2>
+              <p>照片负责把某一秒留下，视频负责把那一秒前后的心动也一起保存。</p>
+            </div>
+            <div class="tiny-tags" aria-label="视频关键词">
+              <span>视频通话</span>
+              <span>并肩自拍</span>
+              <span>手作日常</span>
+              <span>淡蓝晴天</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="lyrics" aria-labelledby="lyrics-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Love Playlist</p>
+              <h2 id="lyrics-title">歌单里的情话</h2>
+            </div>
+            <p class="note-line">用喜欢的歌手和歌名当坐标，把你们的故事写成新的句子。</p>
+          </div>
+
+          <div class="lyrics-grid">
+            <article class="lyric-card" style="--accent: var(--sky-500)">
+              <h3>王力宏 ·《唯一》</h3>
+              <p>你出现以后，普通的一天也像被天空单独点亮。</p>
+              <small>原创情话</small>
+            </article>
+            <article class="lyric-card" style="--accent: var(--coral)">
+              <h3>陈奕迅 ·《好久不见》</h3>
+              <p>想把没见面的时间，折成下一次见面时的拥抱。</p>
+              <small>原创情话</small>
+            </article>
+            <article class="lyric-card" style="--accent: var(--sun)">
+              <h3>周杰伦 ·《简单爱》</h3>
+              <p>淡蓝色的日子里，喜欢你这件事一直很简单。</p>
+              <small>原创情话</small>
+            </article>
+            <article class="lyric-card" style="--accent: var(--leaf)">
+              <h3>孙燕姿 ·《遇见》</h3>
+              <p>所有偶然都悄悄站到我们这边，变成刚刚好的遇见。</p>
+              <small>原创情话</small>
+            </article>
+            <article class="lyric-card" style="--accent: #9bb7ff">
+              <h3>林俊杰 ·《江南》</h3>
+              <p>想念落在心里，像雨后屋檐，一滴一滴都叫你的名字。</p>
+              <small>原创情话</small>
+            </article>
+            <article class="lyric-card" style="--accent: #f0a3c8">
+              <h3>五月天 ·《温柔》</h3>
+              <p>你不用一直勇敢，我会把温柔留在你走得到的地方。</p>
+              <small>原创情话</small>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="moments" aria-labelledby="moments-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Tiny Timeline</p>
+              <h2 id="moments-title">小小时间线</h2>
+            </div>
+            <p class="note-line">不是所有浪漫都要很隆重，有些只是同框、等你、看见你，然后心里很安静地笑一下。</p>
+          </div>
+
+          <div class="moments">
+            <article class="moment">
+              <strong>01</strong>
+              <p>把脸凑近镜头，一张照片就有了两个人的温度。</p>
+            </article>
+            <article class="moment">
+              <strong>02</strong>
+              <p>隔着屏幕比心，距离也被悄悄缩短。</p>
+            </article>
+            <article class="moment">
+              <strong>03</strong>
+              <p>一起做手作，把可爱留在桌面，也留在心里。</p>
+            </article>
+            <article class="moment">
+              <strong>04</strong>
+              <p>下一次见面，继续把今天没有拍完的喜欢补上。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="closing">
+      <p>愿每一次见面，都像浅蓝色天空一样清澈；愿每一次想念，都能稳稳落到对方心上。</p>
+    </footer>
+
+    <dialog id="photo-modal" aria-label="照片预览">
+      <div class="modal-body">
+        <img id="modal-img" src="assets/photo-01.jpg" alt="">
+        <div class="modal-caption">
+          <p id="modal-caption"></p>
+          <button class="close-button" type="button" aria-label="关闭照片预览">×</button>
+        </div>
+      </div>
+    </dialog>
+
+    <script>
+      const modal = document.querySelector("#photo-modal");
+      const modalImg = document.querySelector("#modal-img");
+      const modalCaption = document.querySelector("#modal-caption");
+      const closeButton = document.querySelector(".close-button");
+
+      document.querySelectorAll(".photo-tile").forEach((tile) => {
+        tile.addEventListener("click", () => {
+          const image = tile.querySelector("img");
+          modalImg.src = tile.dataset.full;
+          modalImg.alt = image.alt;
+          modalCaption.textContent = tile.dataset.caption;
+
+          if (typeof modal.showModal === "function") {
+            modal.showModal();
+          }
+        });
+      });
+
+      closeButton.addEventListener("click", () => modal.close());
+
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          modal.close();
+        }
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modal.open) {
+          modal.close();
+        }
+      });
+    </script>
+  </body>
+</html>
